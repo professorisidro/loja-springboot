@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.isidrocorp.loja.dto.MensagemErro;
 import br.com.isidrocorp.loja.model.Cliente;
-import br.com.isidrocorp.loja.repo.ClienteRepo;
+import br.com.isidrocorp.loja.services.IClienteService;
 
 /* Objetivo da classe Controller:
  * 	ser a "interface" (classe que está entre o usuário final e a nossa lógica)
@@ -28,17 +28,15 @@ import br.com.isidrocorp.loja.repo.ClienteRepo;
 public class ClienteController {
 	
 	@Autowired			// o autowired representa a Injeção da dependência do repositório
-	private ClienteRepo repo;
+	private IClienteService service;
 	
 	/* Neste método vamos acessar o findAll do Repo para retornar todos os clientes
 	 * cadastrados no banco	  
 	 */
 	@GetMapping("/clientes")
 	public ArrayList<Cliente> recuperarTodos(){
-		ArrayList<Cliente> lista;
-//		lista = (ArrayList<Cliente>)repo.findAll();
-		lista = repo.findByOrderByNome();
-		return lista;
+		
+		return service.recuperarTodos();
 	}
 	
 	
@@ -48,7 +46,7 @@ public class ClienteController {
 	 */
 	@GetMapping("/clientes/{codigo}")
 	public ResponseEntity<Cliente> recuperarPeloCodigo(@PathVariable int codigo) {
-		Cliente c = repo.findById(codigo).orElse(null);
+		Cliente c = service.recuperarPeloCodigo(codigo);
 		if (c != null) {
 			return ResponseEntity.ok(c);
 		}
@@ -67,7 +65,7 @@ public class ClienteController {
 	
 	@GetMapping("/clientes/busca")
 	public ResponseEntity<?> buscarPorNome(@RequestParam(name = "palavra") String palavra){
-		ArrayList<Cliente> lista = repo.findByNomeContaining(palavra);
+		ArrayList<Cliente> lista = service.recuperarPeloNome(palavra);
 		if (lista.size() > 0) {
 			return ResponseEntity.ok(lista);
 		}
@@ -80,7 +78,7 @@ public class ClienteController {
 	 */
 	@PostMapping("/clientes")
 	public ResponseEntity<Cliente> adicionarNovo(@RequestBody Cliente c){
-		Cliente res = repo.save(c);
+		Cliente res = service.adicionarNovo(c);
 		if (res != null) {
 			return ResponseEntity.status(201).body(res);
 		}
@@ -98,7 +96,7 @@ public class ClienteController {
 	
 	@PutMapping("/clientes")
 	public ResponseEntity<Cliente> atualizarDados(@RequestBody Cliente c){
-		Cliente res = repo.save(c);
+		Cliente res = service.atualizarDados(c);
 		if (res != null) {
 			return ResponseEntity.ok(res);
 		}
@@ -113,8 +111,7 @@ public class ClienteController {
 	 */
 	@DeleteMapping("/clientes/{codigo}")
 	public ResponseEntity<?> removerCliente(@PathVariable int codigo){
-		if (repo.existsById(codigo)) {
-			repo.deleteById(codigo);
+		if (service.excluirCliente(codigo)) {
 			return ResponseEntity.ok(null);
 		}
 		return ResponseEntity.status(404)

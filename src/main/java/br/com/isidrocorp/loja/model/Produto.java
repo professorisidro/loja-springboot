@@ -35,6 +35,30 @@ public class Produto {
 	@ManyToOne
 	@JoinColumn(name = "cod_depto")
 	private Departamento depto;
+	
+	
+
+	public Produto() {
+		super();
+	}
+	
+	
+
+	public Produto(int codigo, String nome, String descricao, int qtdEstoque, 
+			       double preco, String linkFoto, int codDepto, String nomeDepto) {
+		super();
+		this.codigo = codigo;
+		this.nome = nome;
+		this.descricao = descricao;
+		this.qtdEstoque = qtdEstoque;
+		this.preco = preco;
+		this.linkFoto = linkFoto;
+		this.depto = new Departamento();
+		this.depto.setCodDepto(codDepto);
+		this.depto.setNome(nomeDepto);
+	}
+
+
 
 	public int getCodigo() {
 		return codigo;

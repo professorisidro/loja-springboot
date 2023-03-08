@@ -22,7 +22,8 @@ public class ProdutoController {
 	
 	@GetMapping("/produtos")
 	public ArrayList<Produto> recuperarTodos(){
-		return (ArrayList<Produto>) repo.findAll();
+//		return (ArrayList<Produto>) repo.findAll();
+		return repo.recuperarTudoCompleto();
 	}
 	
 	@GetMapping("/produtos/{codigo}")
@@ -42,6 +43,4 @@ public class ProdutoController {
 		}
 		return ResponseEntity.badRequest().body(new MensagemErro(9876,"Erro ao cadastrar Produto"));
 	}
-	
-
 }

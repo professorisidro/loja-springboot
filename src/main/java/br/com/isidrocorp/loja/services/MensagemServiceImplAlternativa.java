@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Qualifier("alternativa")
-public class MensagemSErviceImplAlternativa implements IMensagemService {
+public class MensagemServiceImplAlternativa implements IMensagemService {
 
 	@Override
 	public String gerarUmaMensagem() {

@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.isidrocorp.loja.dto.MensagemErro;
 import br.com.isidrocorp.loja.model.Departamento;
-import br.com.isidrocorp.loja.repo.DepartamentoRepo;
+import br.com.isidrocorp.loja.services.IDepartamentoService;
 
 @RestController
 public class DepartamentoController {
 	
 	@Autowired
-	private DepartamentoRepo repo;
+	private IDepartamentoService service;
 	
 	@GetMapping("/departamentos")
 	public ArrayList<Departamento> recuperarTodos(){
-		return (ArrayList<Departamento>)repo.findAll();
+		return service.recuperarTodos();
 	}
 	
 	@GetMapping("/departamentos/{codigo}")
 	public ResponseEntity<?> recuperarPeloCodigo(@PathVariable int codigo){
-		Departamento d = repo.findById(codigo).orElse(null);
+		Departamento d = service.recuperarPeloCodigo(codigo);
 		if (d != null) {
 			return ResponseEntity.ok(d);
 		}
@@ -37,7 +37,7 @@ public class DepartamentoController {
 	
 	@PostMapping("/departamentos")
 	public ResponseEntity<?> inserirDepartamento(@RequestBody Departamento novo){
-		Departamento res = repo.save(novo);
+		Departamento res = service.cadastrarNovo(novo);
 		if (res != null) {
 			return ResponseEntity.status(201).body(res);
 		}
